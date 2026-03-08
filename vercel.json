@@ -1,0 +1,6 @@
+{
+  "framework": "nextjs",
+  "installCommand": "pnpm install",
+  "buildCommand": "pnpm -F @hiremind/web run build",
+  "outputDirectory": "apps/web/.next"
+}

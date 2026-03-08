@@ -1,0 +1,170 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Design Tokens ─────────────────────────────────────────── */
+:root {
+  /* Marketing page — warm dark */
+  --mk-bg:          #0E0D0C;
+  --mk-surface:     #181612;
+  --mk-surface-2:   #211F1A;
+  --mk-border:      rgba(255,245,235,0.07);
+  --mk-text:        #EDE8E3;
+  --mk-muted:       #7A7067;
+  --mk-subtle:      #3D3830;
+  --mk-ember:       #E07B39;
+  --mk-ember-dim:   rgba(224,123,57,0.12);
+  --mk-ember-border:rgba(224,123,57,0.25);
+  --mk-code-green:  #4ADE80;
+  --mk-code-blue:   #60A5FA;
+  --mk-code-yellow: #FBBF24;
+  --mk-code-purple: #C084FC;
+
+  /* App shell — warm dark theme */
+  --bg-app:        #0E0D0C;
+  --bg-card:       #181612;
+  --text-primary:  #EDE8E3;
+  --text-muted:    #7A7067;
+  --text-subtle:   #5A5450;
+  --border:        rgba(255,245,235,0.07);
+  --primary:       #E07B39;
+  --primary-hover: #D66A27;
+  --primary-bg:    rgba(224,123,57,0.12);
+  --success:       #4ADE80;
+  --warning:       #FBBF24;
+  --danger:        #FF6B6B;
+
+  /* Dark — interview room only (applied via .interview-room class) */
+  --iv-bg:         #0D1117;
+  --iv-surface:    #161B22;
+  --iv-border:     #30363D;
+  --iv-text:       #E6EDF3;
+  --iv-text-muted: #7D8590;
+  --iv-accent:     #58A6FF;
+}
+
+/* ─── Base ───────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  margin: 0;
+  min-height: 100vh;
+}
+
+/* ─── Scrollbar ──────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-subtle);
+}
+
+/* ─── Typography ─────────────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.3;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--primary-hover);
+}
+
+/* ─── Interview Room Dark Theme ──────────────────────────────── */
+.interview-room {
+  background-color: var(--iv-bg);
+  color: var(--iv-text);
+  min-height: 100vh;
+}
+
+/* ─── Waveform animation (voice) ─────────────────────────────── */
+@keyframes waveform {
+  0%, 100% { transform: scaleY(0.3); }
+  50%       { transform: scaleY(1); }
+}
+
+.waveform-bar {
+  width: 3px;
+  border-radius: 2px;
+  animation: waveform 1.2s ease-in-out infinite;
+  transform-origin: bottom;
+}
+
+.waveform-bar:nth-child(1) { animation-delay: 0s; }
+.waveform-bar:nth-child(2) { animation-delay: 0.1s; }
+.waveform-bar:nth-child(3) { animation-delay: 0.2s; }
+.waveform-bar:nth-child(4) { animation-delay: 0.3s; }
+.waveform-bar:nth-child(5) { animation-delay: 0.4s; }
+.waveform-bar:nth-child(6) { animation-delay: 0.3s; }
+.waveform-bar:nth-child(7) { animation-delay: 0.2s; }
+.waveform-bar:nth-child(8) { animation-delay: 0.1s; }
+
+/* ─── Thinking dots (AI) ─────────────────────────────────────── */
+@keyframes thinking-dot {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30%           { transform: translateY(-4px); opacity: 1; }
+}
+
+.thinking-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--iv-text-muted);
+  animation: thinking-dot 1.4s ease-in-out infinite;
+}
+
+.thinking-dot:nth-child(2) { animation-delay: 0.2s; }
+.thinking-dot:nth-child(3) { animation-delay: 0.4s; }
+
+/* ─── Marketing animations ───────────────────────────────────── */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes type-cursor {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+@keyframes scroll-left {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.animate-fade-up    { animation: fade-up 0.6s ease forwards; }
+.cursor-blink       { animation: type-cursor 1s ease infinite; }
+.animate-scroll-left { animation: scroll-left 30s linear infinite; }
+
+/* ─── Focus ring ─────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}

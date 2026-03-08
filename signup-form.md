@@ -1,0 +1,3 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]: HireMind
+  - alert [ref=e5]

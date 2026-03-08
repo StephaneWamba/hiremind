@@ -1,0 +1,38 @@
+{
+  "name": "@hiremind/api",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "exports": {
+    ".": "./src/index.ts",
+    "./trpc": "./src/trpc/router.ts"
+  },
+  "scripts": {
+    "dev": "node --watch src/index.ts",
+    "build": "npx tsc -p tsconfig.build.json",
+    "start": "node dist/index.js",
+    "typecheck": "npx tsc --noEmit"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.24.3",
+    "@deepgram/sdk": "^3.4.0",
+    "@hiremind/db": "workspace:*",
+    "@hiremind/shared": "workspace:*",
+    "@hono/node-server": "^1.13.6",
+    "@trpc/server": "^11.0.0",
+    "drizzle-orm": "^0.45.1",
+    "hono": "^4.6.13",
+    "svix": "^1.31.0",
+    "ws": "^8.18.0",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.9",
+    "@types/ws": "^8.5.14",
+    "typescript": "^5.7.3"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

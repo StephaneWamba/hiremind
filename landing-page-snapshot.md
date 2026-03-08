@@ -1,0 +1,69 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e4]:
+      - generic [ref=e6]: HireMind
+      - generic [ref=e8]:
+        - link "Sign in" [ref=e9] [cursor=pointer]:
+          - /url: /sign-in
+        - link "Get started" [ref=e10] [cursor=pointer]:
+          - /url: /sign-up
+    - generic [ref=e12]:
+      - generic [ref=e13]:
+        - generic [ref=e14]: PUBLIC BETA
+        - heading "The interview is the skill." [level=1] [ref=e15]
+        - paragraph [ref=e16]: Practice voice interviews and live coding sessions with an AI that watches every keystroke, hears every hesitation — and tells you the truth.
+        - generic [ref=e17]:
+          - link "Start practicing" [ref=e18] [cursor=pointer]:
+            - /url: /sign-up
+          - link "See it live" [ref=e19] [cursor=pointer]:
+            - /url: "#modes"
+            - text: See it live
+            - img [ref=e20]
+      - generic [ref=e24]:
+        - generic [ref=e30]: Sr. Engineer · Technical
+        - generic [ref=e31]:
+          - button "● Voice" [ref=e32] [cursor=pointer]
+          - button "○ Live Code" [ref=e33] [cursor=pointer]
+          - button "✓ Feedback" [ref=e34] [cursor=pointer]
+        - generic [ref=e36]:
+          - generic [ref=e39]: Live · 1:23
+          - generic [ref=e40]:
+            - generic [ref=e41]: AI
+            - generic [ref=e42]: Walk me through how you'd design a URL shortener for 100M daily requests.
+          - generic [ref=e43]:
+            - generic [ref=e44]: U
+            - generic [ref=e45]: I'd start by clarifying requirements — read/write ratio, expected QPS, then move to a hash-based approach...
+    - generic [ref=e58]:
+      - generic [ref=e60]:
+        - generic [ref=e61]:
+          - img [ref=e62]
+          - generic [ref=e66]: VOICE + TEXT
+        - heading "Voice Interview" [level=3] [ref=e67]
+        - paragraph [ref=e68]: Answer questions under realistic pressure. The AI adapts difficulty based on your responses, focusing on your weaknesses.
+      - generic [ref=e83]:
+        - generic [ref=e84]:
+          - img [ref=e85]
+          - generic [ref=e89]: LIVE CODING
+        - heading "Real-Time Assessment" [level=3] [ref=e90]
+        - paragraph [ref=e91]: Code in real time while the AI watches every keystroke. Get instant feedback on logic, efficiency, and edge cases.
+        - generic [ref=e92]:
+          - generic [ref=e93]: const result = twoSum([2,7], 9)
+          - generic [ref=e94]: // → [0,1]
+    - generic [ref=e98]:
+      - blockquote [ref=e99]: "I failed two Amazon loops. Used HireMind for two weeks. Third loop: offer."
+      - generic [ref=e100]: Kwame A., Software Engineer
+    - generic [ref=e102]:
+      - heading "Your next interview is a practice session." [level=2] [ref=e103]
+      - link "Get started — it's free" [ref=e104] [cursor=pointer]:
+        - /url: /sign-up
+        - text: Get started — it's free
+        - img [ref=e105]
+    - generic [ref=e109]:
+      - generic [ref=e110]: HireMind · © 2026
+      - generic [ref=e111]:
+        - link "Privacy" [ref=e112] [cursor=pointer]:
+          - /url: "#"
+        - link "Terms" [ref=e113] [cursor=pointer]:
+          - /url: "#"
+      - generic [ref=e114]: Made for ambitious engineers.
+  - alert [ref=e115]

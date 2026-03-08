@@ -1,0 +1,16 @@
+node_modules
+**/node_modules
+.git
+**/.git
+.next
+**/.next
+*.log
+.DS_Store
+.env
+.env.local
+.turbo
+.claude
+apps/web
+dist
+**/dist
+*.tsbuildinfo
