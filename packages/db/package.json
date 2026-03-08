@@ -18,9 +18,11 @@
     "@hiremind/shared": "workspace:*",
     "@neondatabase/serverless": "^1.0.0",
     "drizzle-orm": "^0.45.1",
+    "pg": "^8.11.3",
     "zod": "^3.24.1"
   },
   "devDependencies": {
+    "@types/pg": "^8.11.6",
     "drizzle-kit": "^0.29.1",
     "typescript": "^5.7.3"
   }
