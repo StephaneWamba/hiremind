@@ -43,7 +43,29 @@ export async function handleWsConnection(ws: WebSocket & any) {
         }
 
         // Reconnect: reuse session if in grace period, otherwise create new
-        session = existingSession || new InterviewSession(verified.sessionId, "", "")
+        if (!existingSession) {
+          // For new sessions, load basic metadata first to get userId and jobRoleId
+          const { db } = await import("@hiremind/db")
+          const { interviewSessions } = await import("@hiremind/db")
+          const { eq } = await import("drizzle-orm")
+
+          const sessionRow = await db
+            .select()
+            .from(interviewSessions)
+            .where(eq(interviewSessions.id, verified.sessionId))
+            .then(rows => rows[0])
+
+          if (!sessionRow) {
+            ws.send(JSON.stringify({ type: "error", code: "session_not_found", message: "Session not found" } as ServerMessage))
+            ws.close()
+            return
+          }
+
+          session = new InterviewSession(verified.sessionId, sessionRow.userId, sessionRow.jobRoleId)
+        } else {
+          session = existingSession
+        }
+
         session.ws = ws
         session.wsAlive = true
         session.disconnectedAt = null
