@@ -15,7 +15,7 @@ function MarketingNav() {
 
   return (
     <header
-      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+      className="fixed top-0 left-0 right-0 z-50"
       style={{
         background: scrolled
           ? "rgba(14,13,12,0.92)"
@@ -24,6 +24,7 @@ function MarketingNav() {
         borderBottom: scrolled
           ? "1px solid var(--mk-border)"
           : "1px solid transparent",
+        transition: "background 300ms cubic-bezier(0.4, 0, 0.2, 1), border-bottom 300ms cubic-bezier(0.4, 0, 0.2, 1), backdrop-filter 300ms cubic-bezier(0.4, 0, 0.2, 1)",
       }}
     >
       <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
