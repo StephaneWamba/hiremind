@@ -190,7 +190,7 @@ export function InterviewRoom({ sessionId }: { sessionId: string }) {
       if (mediaRecorderRef.current) mediaRecorderRef.current.stream.getTracks().forEach((t) => t.stop())
       if (audioContextRef.current) audioContextRef.current.close()
     }
-  }, [sessionId])
+  }, [sessionId, sessionQuery.data])
 
   const playNextAudio = () => {
     if (audioQueueRef.current.length === 0) {
