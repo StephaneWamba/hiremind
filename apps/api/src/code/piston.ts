@@ -23,7 +23,7 @@ export async function executeCode(
       java: "java",
       go: "go",
       rust: "rust",
-      cpp: "cpp",
+      cpp: "c++",
       c: "c",
       csharp: "csharp",
       ruby: "ruby",
@@ -35,7 +35,7 @@ export async function executeCode(
     const controller = new AbortController()
     const timeoutId = setTimeout(() => controller.abort(), 10000) // 10 second timeout
 
-    const response = await fetch(`${PISTON_API_URL}/execute`, {
+    const response = await fetch(`${PISTON_API_URL}/piston/execute`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -56,7 +56,14 @@ export async function executeCode(
     clearTimeout(timeoutId)
 
     if (!response.ok) {
-      throw new Error(`Piston API error: ${response.statusText}`)
+      let errorMsg = response.statusText
+      try {
+        const errorBody = (await response.json()) as any
+        errorMsg = errorBody.message || errorBody.error || response.statusText
+      } catch {
+        // If response is not JSON, just use statusText
+      }
+      throw new Error(`Piston API error: ${errorMsg}`)
     }
 
     const result = (await response.json()) as any
