@@ -3,6 +3,8 @@
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import { ChevronRight, Code2, Mic2 } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { useCallback } from "react"
 
 /* ─── Navigation ────────────────────────────────────────────────── */
 function MarketingNav() {
@@ -530,6 +532,12 @@ function Footer() {
 
 /* ─── Main Page ─────────────────────────────────────────────── */
 export default function MarketingPage() {
+  const router = useRouter()
+
+  useEffect(() => {
+    // Middleware handles redirecting authenticated users to dashboard
+  }, [])
+
   return (
     <main>
       <MarketingNav />

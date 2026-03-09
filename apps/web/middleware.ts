@@ -1,29 +1,26 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server"
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 
-const isPublicRoute = createRouteMatcher([
-  "/",
-  "/sign-in(.*)",
-  "/sign-up(.*)",
-  "/api/webhooks(.*)",
-])
+export default function middleware(req: NextRequest) {
+  const url = req.nextUrl.pathname
 
-const isAuthRoute = createRouteMatcher(["/sign-in(.*)", "/sign-up(.*)"])
+  const protectedRoutes = ["/dashboard", "/practice", "/interviews", "/interview"]
+  const isProtectedRoute = protectedRoutes.some((route) => url.startsWith(route))
 
-export default clerkMiddleware(async (auth, req) => {
-  const { userId } = await auth()
+  const publicAuthRoutes = ["/sign-in", "/sign-up", "/"]
 
-  // Redirect authenticated users away from auth pages
-  if (userId && isAuthRoute(req)) {
+  const token = req.cookies.get("accessToken")?.value
+
+  if (token && publicAuthRoutes.includes(url)) {
     return NextResponse.redirect(new URL("/dashboard", req.url))
   }
 
-  // Protect app routes
-  if (!isPublicRoute(req) && !userId) {
+  if (isProtectedRoute && !token) {
     return NextResponse.redirect(new URL("/sign-in", req.url))
   }
-})
+
+  return NextResponse.next()
+}
 
 export const config = {
-  matcher: ["/((?!_next|static|.*\\.(?:ico|png|jpg|jpeg|svg|gif)$).*)"],
+  matcher: ["/((?!_next|api|static|.*\\..*|favicon.ico).*)", "/"],
 }

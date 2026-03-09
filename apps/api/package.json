@@ -21,13 +21,17 @@
     "@hiremind/shared": "workspace:*",
     "@hono/node-server": "^1.13.6",
     "@trpc/server": "^11.0.0",
+    "bcryptjs": "^2.4.3",
     "drizzle-orm": "^0.45.1",
     "hono": "^4.6.13",
+    "jsonwebtoken": "^9.1.2",
     "svix": "^1.31.0",
     "ws": "^8.18.0",
     "zod": "^3.24.1"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.8",
     "@types/node": "^22.7.9",
     "@types/ws": "^8.5.14",
     "typescript": "^5.7.3"

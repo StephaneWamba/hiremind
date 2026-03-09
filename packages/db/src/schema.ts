@@ -25,12 +25,13 @@ export const users = pgTable(
   "users",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    clerkId: text("clerk_id").notNull().unique(),
-    email: text("email").notNull(),
+    email: text("email").notNull().unique(),
     name: text("name"),
+    passwordHash: text("password_hash").notNull(),
+    refreshToken: text("refresh_token"),
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
   },
-  (t) => [index("idx_users_clerk_id").on(t.clerkId)]
+  (t) => [index("idx_users_email").on(t.email)]
 )
 
 export const candidateProfiles = pgTable(

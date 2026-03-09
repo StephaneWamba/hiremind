@@ -1,7 +1,6 @@
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
-import { ClerkProvider } from "@clerk/nextjs"
-import { TRPCProvider } from "@/lib/trpc-provider"
+import { Providers } from "@/components/providers"
 import "./globals.css"
 
 const inter = Inter({
@@ -15,20 +14,20 @@ export const metadata: Metadata = {
   description: "Practice with an adaptive AI interviewer that adjusts to your level, challenges weak spots, and gives detailed feedback.",
 }
 
+export const dynamic = "force-dynamic"
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   return (
-    <ClerkProvider>
-      <html lang="en" className={inter.variable}>
-        <body className="font-sans">
-          <TRPCProvider>
-            {children}
-          </TRPCProvider>
-        </body>
-      </html>
-    </ClerkProvider>
+    <html lang="en" className={inter.variable}>
+      <body className="font-sans">
+        <Providers>
+          {children}
+        </Providers>
+      </body>
+    </html>
   )
 }
