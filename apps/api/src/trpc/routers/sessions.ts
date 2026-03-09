@@ -1,7 +1,7 @@
 import { protectedProcedure, publicProcedure, router } from "../index"
 import { db } from "@hiremind/db"
 import { interviewSessions, jobRoles, conversationTurns } from "@hiremind/db"
-import { eq } from "drizzle-orm"
+import { eq, getTableColumns } from "drizzle-orm"
 import { z } from "zod"
 import { createWsToken } from "../../utils/jwt"
 
@@ -40,7 +40,7 @@ export const sessionsRouter = router({
     .query(async ({ input, ctx }) => {
       const rows = await db
         .select({
-          ...interviewSessions._.columns,
+          ...getTableColumns(interviewSessions),
           roleTitle: jobRoles.title,
         })
         .from(interviewSessions)
@@ -70,7 +70,7 @@ export const sessionsRouter = router({
       // Get session with role title
       const sessionRows = await db
         .select({
-          ...interviewSessions._.columns,
+          ...getTableColumns(interviewSessions),
           roleTitle: jobRoles.title,
         })
         .from(interviewSessions)
