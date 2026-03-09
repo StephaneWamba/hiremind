@@ -17,7 +17,20 @@ export async function handleWsConnection(ws: WebSocket & any) {
 
   ws.on("message", async (data: unknown) => {
     try {
-      const message = JSON.parse((data as Buffer).toString()) as ClientMessage
+      const buffer = data as Buffer
+
+      // Check if this is binary audio data (starts with "audio_chunk\n")
+      if (buffer.length > 12 && buffer.toString("utf-8", 0, 11) === "audio_chunk") {
+        // Extract binary audio data after the type marker (after "audio_chunk\n")
+        const audioData = buffer.slice(12)
+        if (session && audioData.length > 0) {
+          session.audioChunks.push(audioData)
+          console.log(`[WS] Received binary audio chunk: ${audioData.length} bytes (total: ${session.audioChunks.reduce((sum, c) => sum + c.length, 0)} bytes)`)
+        }
+        return
+      }
+
+      const message = JSON.parse(buffer.toString()) as ClientMessage
 
       if (message.type === "join") {
         // Verify token and load session

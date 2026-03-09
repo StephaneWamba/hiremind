@@ -10,8 +10,8 @@ export async function transcribeAudio(audioBuffer: Buffer): Promise<string> {
     const response = await deepgram.listen.prerecorded.transcribeFile(audioBuffer, {
       model: "nova-3",
       smart_format: true,
-      // Support webm/opus format from browser MediaRecorder
-      mimetype: "audio/webm",
+      // Proper MIME type for WebM Opus format from browser MediaRecorder
+      mimetype: "audio/webm;codecs=opus",
     })
 
     const transcript = response.result?.results?.channels[0]?.alternatives[0]?.transcript || ""

@@ -330,14 +330,15 @@ export function InterviewRoom({ sessionId }: { sessionId: string }) {
 
     mediaRecorder.ondataavailable = (event) => {
       chunks.push(event.data)
-      // Convert blob to ArrayBuffer and send to WebSocket as binary
+      // Send raw binary audio data directly (not JSON-encoded)
       event.data.arrayBuffer().then((buffer) => {
-        wsRef.current?.send(
-          JSON.stringify({
-            type: "audio_chunk",
-            data: Array.from(new Uint8Array(buffer)), // Send as array for JSON serialization
-          })
-        )
+        // Send as binary frame with message type prefix
+        const uint8 = new Uint8Array(buffer)
+        const typeBytes = new TextEncoder().encode("audio_chunk\n")
+        const combined = new Uint8Array(typeBytes.length + uint8.length)
+        combined.set(typeBytes)
+        combined.set(uint8, typeBytes.length)
+        wsRef.current?.send(combined.buffer)
       })
     }
 
