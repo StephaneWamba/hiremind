@@ -5,16 +5,21 @@ const deepgram = createClient()
 
 export async function transcribeAudio(audioBuffer: Buffer): Promise<string> {
   try {
+    console.log(`[STT] Transcribing audio buffer of size: ${audioBuffer.length} bytes`)
+
     const response = await deepgram.listen.prerecorded.transcribeFile(audioBuffer, {
       model: "nova-3",
       smart_format: true,
+      // Support webm/opus format from browser MediaRecorder
+      mimetype: "audio/webm",
     })
 
     const transcript = response.result?.results?.channels[0]?.alternatives[0]?.transcript || ""
+    console.log(`[STT] Transcription complete: "${transcript}"`)
     return transcript.trim()
   } catch (err) {
-    console.error("STT error:", err)
-    throw new Error("Speech recognition failed")
+    console.error("STT error:", err instanceof Error ? err.message : String(err))
+    throw new Error(`Speech recognition failed: ${err instanceof Error ? err.message : "unknown error"}`)
   }
 }
 

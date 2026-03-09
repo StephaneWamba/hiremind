@@ -101,9 +101,13 @@ export async function handleWsConnection(ws: WebSocket & any) {
         const audioData = (message as any).data
         if (Array.isArray(audioData)) {
           // Convert from array of bytes to Buffer
-          session.audioChunks.push(Buffer.from(audioData))
+          const chunk = Buffer.from(audioData)
+          session.audioChunks.push(chunk)
+          console.log(`[WS] Received audio chunk: ${chunk.length} bytes (total: ${session.audioChunks.reduce((sum, c) => sum + c.length, 0)} bytes)`)
         } else if (audioData instanceof ArrayBuffer) {
-          session.audioChunks.push(Buffer.from(audioData))
+          const chunk = Buffer.from(audioData)
+          session.audioChunks.push(chunk)
+          console.log(`[WS] Received audio chunk: ${chunk.length} bytes (total: ${session.audioChunks.reduce((sum, c) => sum + c.length, 0)} bytes)`)
         }
       } else if (message.type === "end_turn") {
         // Reject if processing
@@ -116,17 +120,21 @@ export async function handleWsConnection(ws: WebSocket & any) {
         let transcribedText = ""
         if (session.audioChunks.length > 0) {
           const audioBuffer = Buffer.concat(session.audioChunks)
+          console.log(`[WS] Ending turn: ${session.audioChunks.length} chunks, total size: ${audioBuffer.length} bytes`)
           session.audioChunks = [] // Clear for next turn
           try {
             transcribedText = await transcribeAudio(audioBuffer)
           } catch (err) {
-            console.error("Transcription failed:", err)
-            ws.send(JSON.stringify({ type: "error", message: "Speech recognition failed" } as ServerMessage))
+            console.error("Transcription failed:", err instanceof Error ? err.message : String(err))
+            ws.send(JSON.stringify({ type: "error", message: String(err) } as ServerMessage))
             return
           }
+        } else {
+          console.log(`[WS] End turn but no audio chunks received`)
         }
 
         if (!transcribedText.trim()) {
+          console.log(`[WS] Empty transcription, sending listening state`)
           ws.send(JSON.stringify({ type: "listening" } as ServerMessage))
           return
         }
