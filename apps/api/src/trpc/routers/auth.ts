@@ -5,7 +5,7 @@ import { users } from "@hiremind/db"
 import { eq } from "drizzle-orm"
 import { hashPassword, verifyPassword } from "../../auth/password"
 import { signAccessToken, signRefreshToken } from "../../auth/jwt"
-import { router, publicProcedure } from "../trpc"
+import { router, publicProcedure } from "../index"
 
 const SignupInput = z.object({
   email: z.string().email().toLowerCase(),

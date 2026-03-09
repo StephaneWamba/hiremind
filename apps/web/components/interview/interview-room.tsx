@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
-import { useAuth } from "@clerk/nextjs"
 import { Mic, MicOff, Send, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { trpc } from "@/lib/trpc"
@@ -23,7 +22,6 @@ type InterviewMode = "voice" | "text" | "coding"
 
 export function InterviewRoom({ sessionId }: { sessionId: string }) {
   const router = useRouter()
-  const { getToken } = useAuth()
   const wsRef = useRef<WebSocket | null>(null)
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
   const audioContextRef = useRef<AudioContext | null>(null)

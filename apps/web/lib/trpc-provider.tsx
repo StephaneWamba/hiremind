@@ -24,6 +24,17 @@ export function TRPCProvider({ children }: { children: React.ReactNode }) {
       links: [
         httpBatchLink({
           url: `${getApiUrl()}/trpc`,
+          headers: () => {
+            // Extract accessToken from cookie and add to Authorization header
+            const token = document.cookie
+              .split("; ")
+              .find((row) => row.startsWith("accessToken="))
+              ?.split("=")[1]
+
+            return {
+              ...(token && { Authorization: `Bearer ${token}` }),
+            }
+          },
         }),
       ],
     })

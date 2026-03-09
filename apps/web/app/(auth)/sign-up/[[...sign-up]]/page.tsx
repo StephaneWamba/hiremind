@@ -1,22 +1,6 @@
-import { SignUp } from "@clerk/nextjs"
+// This file is deprecated. Use /sign-up instead.
+// Next.js routing will use the more specific /sign-up/page.tsx route.
 
-export default function SignUpPage() {
-  return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-bg-app">
-      <div className="mb-8 text-center">
-        <span className="text-xl font-semibold text-text-primary">Hire</span>
-        <span className="text-xl font-semibold" style={{ color: "var(--primary)" }}>Mind</span>
-        <span className="ml-1 inline-block w-1.5 h-1.5 rounded-full bg-primary align-middle mb-0.5" />
-      </div>
-      <SignUp
-        appearance={{
-          elements: {
-            card: "shadow-sm border border-border rounded-xl",
-            headerTitle: "hidden",
-            headerSubtitle: "hidden",
-          },
-        }}
-      />
-    </div>
-  )
+export default function DeprecatedSignUpPage() {
+  return <div>Deprecated page - please use /sign-up</div>
 }

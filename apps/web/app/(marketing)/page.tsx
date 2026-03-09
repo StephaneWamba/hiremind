@@ -62,7 +62,7 @@ function InteractiveMockup() {
   const [activeTab, setActiveTab] = useState<"voice" | "coding" | "feedback">("voice")
 
   return (
-    <div className="relative select-none">
+    <div className="relative select-none w-full md:w-auto max-w-sm md:max-w-2xl">
       {/* Ambient glow */}
       <div
         className="absolute -inset-8 rounded-3xl blur-3xl pointer-events-none"
@@ -73,7 +73,7 @@ function InteractiveMockup() {
 
       {/* Window */}
       <div
-        className="relative rounded-2xl overflow-hidden"
+        className="relative rounded-2xl overflow-hidden w-full"
         style={{
           background: "var(--mk-surface)",
           border: "1px solid var(--mk-border)",
@@ -294,7 +294,7 @@ function InteractiveMockup() {
 function HeroSection() {
   return (
     <section className="min-h-screen flex items-center justify-center pt-14" style={{ background: "var(--mk-bg)" }}>
-      <div className="max-w-6xl mx-auto px-6 w-full grid grid-cols-2 gap-12 lg:gap-16">
+      <div className="max-w-6xl mx-auto px-6 w-full grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16">
         {/* Left column */}
         <div className="flex flex-col justify-center">
           {/* Eyebrow */}
@@ -336,8 +336,10 @@ function HeroSection() {
         </div>
 
         {/* Right column — Interactive mockup */}
-        <div className="flex items-center justify-center lg:pt-0 pt-8">
-          <InteractiveMockup />
+        <div className="flex items-center justify-center lg:pt-0 pt-8 max-w-full overflow-hidden">
+          <div className="w-full md:w-auto">
+            <InteractiveMockup />
+          </div>
         </div>
       </div>
     </section>

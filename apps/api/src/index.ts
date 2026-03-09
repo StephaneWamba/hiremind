@@ -2,7 +2,6 @@ import { Hono } from "hono"
 import { serve } from "@hono/node-server"
 import { cors } from "hono/cors"
 import { WebSocketServer } from "ws"
-import { handleClerkWebhook } from "./webhooks/clerk"
 import { handleTrpc } from "./trpc/handler"
 import { handleWsConnection } from "./ws/handler"
 import type { Server } from "http"
@@ -21,20 +20,6 @@ app.use(
 // Health check endpoint
 app.get("/health", (c) => {
   return c.json({ status: "ok", timestamp: new Date().toISOString() })
-})
-
-// Clerk webhook
-app.post("/webhooks/clerk", async (c) => {
-  const signature = c.req.header("svix-signature") || ""
-  const body = await c.req.text()
-
-  try {
-    await handleClerkWebhook(body, signature)
-    return c.json({ success: true })
-  } catch (err) {
-    console.error("Webhook error:", err)
-    return c.json({ error: "Unauthorized" }, 401)
-  }
 })
 
 // tRPC routes
