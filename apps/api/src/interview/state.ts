@@ -172,6 +172,7 @@ export class InterviewSession {
       .set({
         status: "completed",
         endedAt: new Date(),
+        topicsState: this.state,
         durationMinutes: Math.round(
           (Date.now() - (this.turns[0]?.timestamp?.getTime() || Date.now())) / 60000
         ),
