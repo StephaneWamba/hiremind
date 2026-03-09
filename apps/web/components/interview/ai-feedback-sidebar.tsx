@@ -1,5 +1,8 @@
 "use client"
 
+import ReactMarkdown from "react-markdown"
+import remarkGfm from "remark-gfm"
+
 interface AiFeedbackItem {
   type: "positive" | "warning" | "suggestion"
   message: string
@@ -91,7 +94,43 @@ export function AIFeedbackSidebar({
                   {iconMap[item.type]} {item.type.charAt(0).toUpperCase() + item.type.slice(1)}
                   {item.lineNumber && <span className="ml-2 opacity-60">Ln {item.lineNumber}</span>}
                 </div>
-                <div style={{ color: "var(--iv-text)" }}>{item.message}</div>
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  components={{
+                    p: ({ children }) => <p style={{ margin: 0 }}>{children}</p>,
+                    strong: ({ children }) => <strong style={{ fontWeight: 600, color: "var(--iv-text)" }}>{children}</strong>,
+                    em: ({ children }) => <em style={{ fontStyle: "italic" }}>{children}</em>,
+                    code: ({ children }) => (
+                      <code
+                        style={{
+                          backgroundColor: "rgba(255,255,255,0.1)",
+                          color: "#60A5FA",
+                          padding: "0.125rem 0.25rem",
+                          borderRadius: "0.25rem",
+                          fontFamily: "monospace",
+                          fontSize: "0.875em",
+                        }}
+                      >
+                        {children}
+                      </code>
+                    ),
+                    pre: ({ children }) => (
+                      <pre
+                        style={{
+                          backgroundColor: "rgba(0,0,0,0.3)",
+                          padding: "0.75rem",
+                          borderRadius: "0.375rem",
+                          overflowX: "auto",
+                          margin: "0.5rem 0 0 0",
+                        }}
+                      >
+                        {children}
+                      </pre>
+                    ),
+                  }}
+                >
+                  {item.message.replace(/\n+/g, " ").trim()}
+                </ReactMarkdown>
               </div>
             )
           })
