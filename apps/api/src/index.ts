@@ -48,6 +48,7 @@ const server = serve(
   {
     fetch: app.fetch,
     port,
+    hostname: "0.0.0.0",
   },
   (info) => {
     console.log(`Listening on http://${info.address}:${info.port}`)
