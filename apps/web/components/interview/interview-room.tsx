@@ -22,6 +22,19 @@ type ConversationTurn = {
 type InterviewState = "joining" | "ready" | "listening" | "thinking" | "speaking"
 type InterviewMode = "voice" | "text" | "coding"
 
+// Normalize markdown content by joining broken lines while preserving paragraph breaks
+function normalizeMarkdown(text: string): string {
+  // Preserve intentional double newlines (paragraph breaks)
+  const paragraphs = text.split(/\n\n+/)
+  return paragraphs
+    .map(para => {
+      // Within each paragraph, replace single newlines with spaces
+      return para.replace(/\n+/g, " ").trim()
+    })
+    .filter(p => p.length > 0)
+    .join("\n\n")
+}
+
 export function InterviewRoom({ sessionId }: { sessionId: string }) {
   const router = useRouter()
   const wsRef = useRef<WebSocket | null>(null)
@@ -630,7 +643,7 @@ export function InterviewRoom({ sessionId }: { sessionId: string }) {
                           ),
                         }}
                       >
-                        {turn.content}
+                        {normalizeMarkdown(turn.content)}
                       </ReactMarkdown>
                     </div>
                     {turn.role === "candidate" && (
@@ -719,7 +732,7 @@ export function InterviewRoom({ sessionId }: { sessionId: string }) {
                           ),
                         }}
                       >
-                        {turn.content}
+                        {normalizeMarkdown(turn.content)}
                       </ReactMarkdown>
                     </div>
                   </div>
