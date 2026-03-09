@@ -73,6 +73,7 @@ export const sessionsRouter = router({
         mode: interviewSessions.mode,
         status: interviewSessions.status,
         currentDifficulty: interviewSessions.currentDifficulty,
+        topicsState: interviewSessions.topicsState,
         durationMinutes: interviewSessions.durationMinutes,
         createdAt: interviewSessions.createdAt,
         roleTitle: jobRoles.title,
