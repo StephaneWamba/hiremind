@@ -3,7 +3,6 @@
 import Link from "next/link"
 import { useState } from "react"
 import { trpc } from "@/lib/trpc"
-import { format } from "date-fns"
 
 type FilterType = "all" | "technical" | "behavioral" | "system_design" | "case"
 
@@ -88,7 +87,7 @@ export default function InterviewsPage() {
                   <td className="px-4 py-3 text-sm text-text-muted capitalize">{session.interviewType}</td>
                   <td className="px-4 py-3 text-sm text-text-muted capitalize">{session.level}</td>
                   <td className="px-4 py-3 text-sm text-text-muted">
-                    {session.createdAt ? format(new Date(session.createdAt), "MMM d, yyyy") : "-"}
+                    {session.createdAt ? new Date(session.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "-"}
                   </td>
                   <td className="px-4 py-3 text-sm">
                     <span

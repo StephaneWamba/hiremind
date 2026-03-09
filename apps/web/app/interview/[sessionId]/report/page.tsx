@@ -3,7 +3,6 @@
 import Link from "next/link"
 import { useParams, useRouter } from "next/navigation"
 import { trpc } from "@/lib/trpc"
-import { format } from "date-fns"
 
 export default function InterviewReportPage() {
   const params = useParams()
@@ -60,7 +59,7 @@ export default function InterviewReportPage() {
             </div>
             <div className="text-right">
               <p className="text-sm text-text-muted">
-                {session.createdAt ? format(new Date(session.createdAt), "MMM d, yyyy") : "-"}
+                {session.createdAt ? new Date(session.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "-"}
               </p>
               {session.durationMinutes && <p className="text-sm text-text-muted">{session.durationMinutes} minutes</p>}
             </div>
