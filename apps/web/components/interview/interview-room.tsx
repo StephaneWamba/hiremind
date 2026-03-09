@@ -404,21 +404,21 @@ export function InterviewRoom({ sessionId }: { sessionId: string }) {
     >
       {/* Top Bar */}
       <div
-        className="h-12 flex items-center justify-between px-6 border-b"
+        className="h-12 flex items-center justify-between px-3 sm:px-6 border-b text-sm gap-2 overflow-x-auto"
         style={{ borderColor: "var(--iv-border)" }}
       >
-        <div className="flex items-center gap-3">
-          <span className="text-sm font-semibold">HireMind</span>
+        <div className="flex items-center gap-2 min-w-0">
+          <span className="font-semibold whitespace-nowrap">HireMind</span>
           {sessionInfo?.roleTitle && (
             <>
               <span
-                className="w-1 h-1 rounded-full"
+                className="w-1 h-1 rounded-full flex-shrink-0"
                 style={{ backgroundColor: "var(--iv-text-muted)" }}
               />
-              <span className="text-sm text-iv-text-muted">{sessionInfo.roleTitle}</span>
+              <span className="text-iv-text-muted truncate">{sessionInfo.roleTitle}</span>
               {sessionInfo?.type && (
                 <span
-                  className="text-xs px-2 py-1 rounded"
+                  className="text-xs px-2 py-1 rounded whitespace-nowrap flex-shrink-0"
                   style={{ backgroundColor: "var(--iv-border)" }}
                 >
                   {sessionInfo.type}
@@ -428,35 +428,35 @@ export function InterviewRoom({ sessionId }: { sessionId: string }) {
           )}
         </div>
 
-        <div className="text-sm font-semibold">{elapsedTime}</div>
+        <div className="font-semibold whitespace-nowrap">{elapsedTime}</div>
 
         <button
           onClick={endInterview}
-          className="text-sm text-iv-text-muted hover:text-iv-text transition-colors flex items-center gap-1"
+          className="text-iv-text-muted hover:text-iv-text transition-colors flex items-center gap-1 flex-shrink-0 whitespace-nowrap"
         >
           <X size={16} />
-          End
+          <span className="hidden sm:inline">End</span>
         </button>
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
         {mode === "coding" ? (
           <>
-            {/* Code Editor - 60% */}
-            <div className="w-3/5 flex flex-col border-r overflow-hidden" style={{ borderColor: "var(--iv-border)" }}>
+            {/* Code Editor - 60% on desktop, full on mobile */}
+            <div className="w-full lg:w-3/5 flex flex-col border-b lg:border-b-0 lg:border-r overflow-hidden" style={{ borderColor: "var(--iv-border)" }}>
               {/* Language Selector */}
               <div
-                className="px-4 py-3 border-b flex items-center gap-3"
+                className="px-3 sm:px-4 py-3 border-b flex items-center gap-3"
                 style={{ borderColor: "var(--iv-border)" }}
               >
-                <label className="text-xs font-semibold" style={{ color: "var(--iv-text-muted)" }}>
+                <label className="text-xs font-semibold whitespace-nowrap" style={{ color: "var(--iv-text-muted)" }}>
                   Language:
                 </label>
                 <select
                   value={codeLanguage}
                   onChange={(e) => setCodeLanguage(e.target.value)}
-                  className="px-2 py-1 rounded text-xs bg-iv-surface text-iv-text border"
+                  className="px-2 py-1 rounded text-xs bg-iv-surface text-iv-text border flex-1"
                   style={{
                     backgroundColor: "var(--iv-surface)",
                     color: "var(--iv-text)",
@@ -483,7 +483,7 @@ export function InterviewRoom({ sessionId }: { sessionId: string }) {
               {/* Code Output */}
               {codeOutput && (
                 <div
-                  className="px-4 py-3 border-t text-xs font-mono overflow-auto max-h-32"
+                  className="px-3 sm:px-4 py-3 border-t text-xs font-mono overflow-auto max-h-32"
                   style={{
                     borderColor: "var(--iv-border)",
                     backgroundColor: "rgba(0,0,0,0.3)",
@@ -506,8 +506,8 @@ export function InterviewRoom({ sessionId }: { sessionId: string }) {
               )}
             </div>
 
-            {/* AI Feedback Sidebar - 40% */}
-            <div className="w-2/5 flex flex-col overflow-hidden">
+            {/* AI Feedback Sidebar - 40% on desktop, full on mobile */}
+            <div className="w-full lg:w-2/5 flex flex-col overflow-hidden min-h-40 lg:min-h-0">
               <AIFeedbackSidebar
                 isThinking={state === "thinking"}
                 feedback={codeFeedback}
@@ -516,19 +516,19 @@ export function InterviewRoom({ sessionId }: { sessionId: string }) {
           </>
         ) : (
           <>
-            {/* Interviewer Panel - 40% */}
+            {/* Interviewer Panel - 40% on desktop, full on mobile */}
             <div
-              className="w-2/5 flex flex-col items-center justify-center border-r p-6"
+              className="w-full lg:w-2/5 flex flex-col items-center justify-center border-b lg:border-b-0 lg:border-r p-4 sm:p-6"
               style={{ borderColor: "var(--iv-border)" }}
             >
               <div
-                className="w-20 h-20 rounded-full flex items-center justify-center mb-4"
+                className="w-16 sm:w-20 h-16 sm:h-20 rounded-full flex items-center justify-center mb-4"
                 style={{
                   backgroundColor: "var(--iv-surface)",
                   color: "var(--iv-accent)",
                 }}
               >
-                <Mic size={32} />
+                <Mic size={28} className="sm:size-32" />
               </div>
 
               <p className="text-sm font-medium mb-6">{statusText[state]}</p>
@@ -542,12 +542,12 @@ export function InterviewRoom({ sessionId }: { sessionId: string }) {
               )}
             </div>
 
-            {/* Transcript Panel - 60% */}
+            {/* Transcript Panel - 60% on desktop, full on mobile */}
             <div
-              className="w-3/5 flex flex-col overflow-hidden"
+              className="w-full lg:w-3/5 flex flex-col overflow-hidden"
               style={{ backgroundColor: "var(--iv-surface)" }}
             >
-              <div className="flex-1 overflow-y-auto p-6 space-y-4">
+              <div className="flex-1 overflow-y-auto p-3 sm:p-6 space-y-4">
                 {transcript.map((turn, i) => (
                   <div
                     key={i}
@@ -582,7 +582,7 @@ export function InterviewRoom({ sessionId }: { sessionId: string }) {
 
       {/* Control Bar */}
       <div
-        className="h-20 flex items-center justify-center gap-4 border-t px-6"
+        className="flex flex-col sm:flex-row items-center justify-center gap-3 border-t px-3 sm:px-6 py-3 sm:h-20 flex-wrap"
         style={{ borderColor: "var(--iv-border)" }}
       >
         {mode === "voice" ? (
@@ -590,17 +590,18 @@ export function InterviewRoom({ sessionId }: { sessionId: string }) {
             <button
               onClick={isRecording ? stopRecording : startRecording}
               disabled={state !== "ready" && state !== "listening"}
+              title={isRecording ? "Stop recording" : "Start recording"}
               className={cn(
-                "w-16 h-16 rounded-full flex items-center justify-center transition-all flex-shrink-0",
+                "w-14 h-14 sm:w-16 sm:h-16 rounded-full flex items-center justify-center transition-all flex-shrink-0",
                 isRecording
                   ? "bg-red-600 hover:bg-red-700 disabled:opacity-50"
                   : "bg-primary hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed"
               )}
             >
               {isRecording ? (
-                <MicOff size={24} className="text-white" />
+                <MicOff size={20} className="sm:size-24 text-white" />
               ) : (
-                <Mic size={24} className="text-white" />
+                <Mic size={20} className="sm:size-24 text-white" />
               )}
             </button>
 
@@ -623,24 +624,25 @@ export function InterviewRoom({ sessionId }: { sessionId: string }) {
               }}
               disabled={state !== "ready"}
               placeholder="Type your response..."
-              className="flex-1 px-4 py-2 rounded-lg text-sm bg-iv-bg text-iv-text placeholder:text-iv-text-muted border disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 min-w-0 px-3 py-2 rounded-lg text-sm bg-iv-bg text-iv-text placeholder:text-iv-text-muted border disabled:opacity-50 disabled:cursor-not-allowed"
               style={{ borderColor: "var(--iv-border)" }}
             />
             <button
               onClick={sendText}
               disabled={!textInput.trim() || state !== "ready"}
-              className="px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+              title="Send message"
+              className="px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2 whitespace-nowrap"
             >
               <Send size={16} />
-              Send
+              <span className="hidden sm:inline">Send</span>
             </button>
           </>
         ) : mode === "coding" ? (
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 flex-wrap justify-center">
             <button
               onClick={runCode}
               disabled={!codeInput.trim() || state !== "ready"}
-              className="px-4 py-2 rounded-lg bg-iv-surface text-iv-text hover:bg-iv-border disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium border"
+              className="px-3 py-2 rounded-lg bg-iv-surface text-iv-text hover:bg-iv-border disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium border whitespace-nowrap"
               style={{
                 borderColor: "var(--iv-border)",
                 backgroundColor: "var(--iv-surface)",
@@ -652,7 +654,7 @@ export function InterviewRoom({ sessionId }: { sessionId: string }) {
             <button
               onClick={getCodeHint}
               disabled={!codeInput.trim() || state !== "ready"}
-              className="px-4 py-2 rounded-lg bg-iv-surface text-iv-text hover:bg-iv-border disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium border"
+              className="px-3 py-2 rounded-lg bg-iv-surface text-iv-text hover:bg-iv-border disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium border whitespace-nowrap"
               style={{
                 borderColor: "var(--iv-border)",
                 backgroundColor: "var(--iv-surface)",
@@ -664,7 +666,7 @@ export function InterviewRoom({ sessionId }: { sessionId: string }) {
             <button
               onClick={sendCode}
               disabled={!codeInput.trim() || state !== "ready"}
-              className="px-6 py-2 rounded-lg bg-primary text-white hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2 font-medium"
+              className="px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2 font-medium whitespace-nowrap"
             >
               <Send size={16} />
               Submit

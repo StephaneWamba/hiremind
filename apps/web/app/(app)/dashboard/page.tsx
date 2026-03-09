@@ -30,13 +30,13 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       {/* Header */}
-      <div className="px-8 py-6 border-b" style={{ borderColor: "var(--border)" }}>
-        <h1 className="text-2xl font-semibold text-text-primary">Dashboard</h1>
+      <div className="px-4 sm:px-6 md:px-8 py-4 sm:py-6 border-b" style={{ borderColor: "var(--border)" }}>
+        <h1 className="text-xl sm:text-2xl font-semibold text-text-primary">Dashboard</h1>
       </div>
 
-      <div className="px-8 space-y-8">
+      <div className="px-4 sm:px-6 md:px-8 space-y-6 sm:space-y-8">
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <StatCard
@@ -162,22 +162,22 @@ function RecentInterviews({
               }}
               className="border-b"
             >
-              <th className="text-left px-6 py-3 font-medium text-text-muted">
+              <th className="text-left px-3 sm:px-6 py-3 font-medium text-text-muted text-xs sm:text-sm">
                 Role
               </th>
-              <th className="text-left px-6 py-3 font-medium text-text-muted">
+              <th className="text-left px-3 sm:px-6 py-3 font-medium text-text-muted text-xs sm:text-sm">
                 Type
               </th>
-              <th className="text-left px-6 py-3 font-medium text-text-muted">
+              <th className="text-left px-3 sm:px-6 py-3 font-medium text-text-muted text-xs sm:text-sm">
                 Level
               </th>
-              <th className="text-left px-6 py-3 font-medium text-text-muted">
+              <th className="text-left px-3 sm:px-6 py-3 font-medium text-text-muted text-xs sm:text-sm">
                 Score
               </th>
-              <th className="text-left px-6 py-3 font-medium text-text-muted">
+              <th className="text-left px-3 sm:px-6 py-3 font-medium text-text-muted text-xs sm:text-sm">
                 Date
               </th>
-              <th className="text-left px-6 py-3 font-medium text-text-muted" />
+              <th className="text-left px-3 sm:px-6 py-3 font-medium text-text-muted" />
             </tr>
           </thead>
           <tbody>
@@ -190,21 +190,21 @@ function RecentInterviews({
                 <tr
                   key={session.id}
                   style={{ borderColor: "var(--border)" }}
-                  className="border-b hover:bg-bg-app/50 transition-colors"
+                  className="border-b hover:bg-bg-app/50 transition-colors text-sm"
                 >
-                  <td className="px-6 py-3 font-medium text-text-primary">
+                  <td className="px-3 sm:px-6 py-3 font-medium text-text-primary truncate">
                     {session.jobRoleId}
                   </td>
-                  <td className="px-6 py-3 text-text-muted capitalize">
+                  <td className="px-3 sm:px-6 py-3 text-text-muted capitalize text-xs sm:text-sm">
                     {session.interviewType.replace("_", " ")}
                   </td>
-                  <td className="px-6 py-3 text-text-muted capitalize">
+                  <td className="px-3 sm:px-6 py-3 text-text-muted capitalize text-xs sm:text-sm">
                     {session.level}
                   </td>
-                  <td className="px-6 py-3">
+                  <td className="px-3 sm:px-6 py-3">
                     {avgScore !== null ? (
                       <span
-                        className="px-3 py-1 rounded-full text-xs font-semibold text-white"
+                        className="px-2 sm:px-3 py-1 rounded-full text-xs font-semibold text-white"
                         style={{
                           backgroundColor:
                             avgScore >= 80
@@ -220,10 +220,10 @@ function RecentInterviews({
                       <span className="text-text-muted">—</span>
                     )}
                   </td>
-                  <td className="px-6 py-3 text-text-muted">
+                  <td className="px-3 sm:px-6 py-3 text-text-muted text-xs sm:text-sm whitespace-nowrap">
                     {date}
                   </td>
-                  <td className="px-6 py-3 text-right">
+                  <td className="px-3 sm:px-6 py-3 text-right">
                     <Link
                       href={`/interview/${session.id}/report`}
                       className="text-primary hover:underline text-xs font-medium"

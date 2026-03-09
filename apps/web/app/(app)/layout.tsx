@@ -10,7 +10,7 @@ export default async function AppLayout({
   return (
     <div className="flex min-h-screen bg-bg-app">
       <aside
-        className="fixed left-0 top-0 h-full flex flex-col"
+        className="hidden lg:flex fixed left-0 top-0 h-full flex-col"
         style={{
           width: 240,
           background: "var(--bg-card)",
@@ -37,7 +37,7 @@ export default async function AppLayout({
         </div>
       </aside>
 
-      <div className="flex-1" style={{ marginLeft: 240 }}>
+      <div className="flex-1 lg:ml-60">
         {children}
       </div>
     </div>

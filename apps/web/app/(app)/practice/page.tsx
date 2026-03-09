@@ -74,11 +74,11 @@ export default function PracticePage() {
   }
 
   return (
-    <div className="px-8 py-8">
-      <h1 className="text-xl font-semibold text-text-primary mb-12">Start a Practice Interview</h1>
+    <div className="px-4 sm:px-6 md:px-8 py-6 sm:py-8">
+      <h1 className="text-lg sm:text-xl font-semibold text-text-primary mb-8 sm:mb-12">Start a Practice Interview</h1>
 
       {/* Step indicator */}
-      <div className="mb-12 flex items-center justify-center gap-12">
+      <div className="mb-8 sm:mb-12 flex items-center justify-center gap-4 sm:gap-8 md:gap-12">
         {[1, 2, 3].map((s) => (
           <div key={s} className="flex flex-col items-center gap-2">
             <div
@@ -93,7 +93,7 @@ export default function PracticePage() {
             >
               {step > s ? "✓" : s}
             </div>
-            <span className="text-xs font-medium text-text-muted">
+            <span className="text-xs font-medium text-text-muted text-center">
               {s === 1 ? "Role" : s === 2 ? "Type" : "Level & Mode"}
             </span>
           </div>
@@ -163,10 +163,10 @@ export default function PracticePage() {
         )}
 
         {step === 3 && (
-          <div className="space-y-8">
+          <div className="space-y-6 sm:space-y-8">
             <div>
               <h2 className="text-lg font-semibold text-text-primary mb-4">Difficulty Level</h2>
-              <div className="flex gap-3">
+              <div className="flex flex-wrap gap-3">
                 {["junior", "mid", "senior"].map((level) => (
                   <button
                     key={level}
@@ -174,10 +174,10 @@ export default function PracticePage() {
                       setSelectedLevel(level as "junior" | "mid" | "senior")
                     }
                     className={cn(
-                      "px-6 py-2 rounded-lg font-medium transition-colors",
+                      "px-4 sm:px-6 py-2 rounded-lg font-medium transition-colors",
                       selectedLevel === level
-                        ? "bg-primary text-white"
-                        : "bg-border text-text-primary hover:bg-primary/10"
+                        ? "bg-primary text-white hover:bg-primary-hover"
+                        : "bg-border text-text-primary hover:bg-primary hover:text-white"
                     )}
                   >
                     {level.charAt(0).toUpperCase() + level.slice(1)}
@@ -188,7 +188,7 @@ export default function PracticePage() {
 
             <div>
               <h2 className="text-lg font-semibold text-text-primary mb-4">Interview Mode</h2>
-              <div className="flex gap-3">
+              <div className="flex flex-wrap gap-3">
                 {[
                   { id: "voice", label: "Voice", icon: Volume2 },
                   { id: "text", label: "Text", icon: Type },
@@ -198,10 +198,10 @@ export default function PracticePage() {
                     key={id}
                     onClick={() => setSelectedMode(id as "voice" | "text" | "coding")}
                     className={cn(
-                      "flex items-center gap-2 px-6 py-2 rounded-lg font-medium transition-colors",
+                      "flex items-center gap-2 px-4 sm:px-6 py-2 rounded-lg font-medium transition-colors whitespace-nowrap",
                       selectedMode === id
-                        ? "bg-primary text-white"
-                        : "bg-border text-text-primary hover:bg-primary/10"
+                        ? "bg-primary text-white hover:bg-primary-hover"
+                        : "bg-border text-text-primary hover:bg-primary hover:text-white"
                     )}
                   >
                     <Icon size={18} />
@@ -215,11 +215,11 @@ export default function PracticePage() {
       </div>
 
       {/* Navigation */}
-      <div className="mt-12 flex items-center justify-center gap-3">
+      <div className="mt-8 sm:mt-12 flex flex-col sm:flex-row items-center justify-center gap-3 w-full sm:w-auto">
         <button
           onClick={() => setStep(Math.max(1, step - 1))}
           disabled={step === 1}
-          className="px-6 py-2 rounded-lg font-medium text-text-primary hover:bg-border disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="w-full sm:w-auto px-6 py-2 rounded-lg font-medium text-text-primary bg-border hover:bg-border/80 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           Back
         </button>
@@ -236,7 +236,7 @@ export default function PracticePage() {
             (step === 2 && !selectedType) ||
             isLoading
           }
-          className="px-6 py-2 rounded-lg font-medium text-white bg-primary hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="w-full sm:w-auto px-6 py-2 rounded-lg font-medium text-white bg-primary hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           {step === 3 ? isLoading ? "Starting..." : "Start Interview" : "Next"}
         </button>
