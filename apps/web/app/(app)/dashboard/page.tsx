@@ -193,7 +193,7 @@ function RecentInterviews({
                   className="border-b hover:bg-bg-app/50 transition-colors text-sm"
                 >
                   <td className="px-3 sm:px-6 py-3 font-medium text-text-primary truncate">
-                    {session.jobRoleId}
+                    {(session as any).roleTitle || "Unknown Role"}
                   </td>
                   <td className="px-3 sm:px-6 py-3 text-text-muted capitalize text-xs sm:text-sm">
                     {session.interviewType.replace("_", " ")}
