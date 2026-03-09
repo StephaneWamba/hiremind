@@ -1,12 +1,11 @@
 "use client"
 
 import Link from "next/link"
-import { useParams, useRouter } from "next/navigation"
+import { useParams } from "next/navigation"
 import { trpc } from "@/lib/trpc"
 
 export default function InterviewReportPage() {
   const params = useParams()
-  const router = useRouter()
   const sessionId = params.sessionId as string
 
   const reportQuery = trpc.sessions.getReport.useQuery(sessionId)
