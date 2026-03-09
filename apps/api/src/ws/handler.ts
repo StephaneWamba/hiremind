@@ -135,25 +135,27 @@ export async function handleWsConnection(ws: WebSocket & any) {
         session.isProcessing = true
 
         try {
-          await runAgentTurn(session, transcribedText, (chunk) => {
-            ws.send(
-              JSON.stringify({
-                type: "transcript",
-                role: "interviewer",
-                content: chunk,
-              } as ServerMessage)
-            )
-          })
+          ws.send(JSON.stringify({ type: "audio_start" } as ServerMessage))
 
-          // Synthesize and send audio
-          const lastTurn = session.turns[session.turns.length - 1]
-          if (lastTurn) {
-            ws.send(JSON.stringify({ type: "audio_start" } as ServerMessage))
-            const audio = await synthesize(lastTurn.text)
-            ws.send(JSON.stringify({ type: "audio_chunk", data: audio.buffer } as ServerMessage))
-            ws.send(JSON.stringify({ type: "audio_end" } as ServerMessage))
-            ws.send(JSON.stringify({ type: "listening" } as ServerMessage))
-          }
+          await runAgentTurn(
+            session,
+            transcribedText,
+            (chunk) => {
+              ws.send(
+                JSON.stringify({
+                  type: "transcript",
+                  role: "interviewer",
+                  content: chunk,
+                } as ServerMessage)
+              )
+            },
+            (buffer) => {
+              ws.send(buffer) // Send audio as binary frame
+            }
+          )
+
+          ws.send(JSON.stringify({ type: "audio_end" } as ServerMessage))
+          ws.send(JSON.stringify({ type: "listening" } as ServerMessage))
         } catch (err) {
           console.error("Agent error:", err)
           ws.send(JSON.stringify({ type: "error", message: "Interview error" } as ServerMessage))
@@ -171,27 +173,20 @@ export async function handleWsConnection(ws: WebSocket & any) {
         session.isProcessing = true
 
         try {
-          await runAgentTurn(session, message.content, (chunk) => {
-            ws.send(
-              JSON.stringify({
-                type: "transcript",
-                role: "interviewer",
-                content: chunk,
-              } as ServerMessage)
-            )
-          })
-
-          // Send final transcript
-          const lastTurn = session.turns[session.turns.length - 1]
-          if (lastTurn) {
-            ws.send(
-              JSON.stringify({
-                type: "transcript",
-                role: "interviewer",
-                content: lastTurn.text,
-              } as ServerMessage)
-            )
-          }
+          await runAgentTurn(
+            session,
+            message.content,
+            (chunk) => {
+              ws.send(
+                JSON.stringify({
+                  type: "transcript",
+                  role: "interviewer",
+                  content: chunk,
+                } as ServerMessage)
+              )
+            },
+            undefined // No audio callback for text mode
+          )
 
           ws.send(JSON.stringify({ type: "ready" } as ServerMessage))
         } catch (err) {
@@ -227,16 +222,26 @@ ${message.code}
 [EXECUTION OUTPUT]
 ${session.lastExecutionOutput || "Not executed"}`
 
-          await runAgentTurn(session, envelope, (chunk) => {
-            ws.send(
-              JSON.stringify({
-                type: "transcript",
-                role: "interviewer",
-                content: chunk,
-              } as ServerMessage)
-            )
-          })
+          ws.send(JSON.stringify({ type: "audio_start" } as ServerMessage))
 
+          await runAgentTurn(
+            session,
+            envelope,
+            (chunk) => {
+              ws.send(
+                JSON.stringify({
+                  type: "transcript",
+                  role: "interviewer",
+                  content: chunk,
+                } as ServerMessage)
+              )
+            },
+            (buffer) => {
+              ws.send(buffer) // Send audio as binary frame
+            }
+          )
+
+          ws.send(JSON.stringify({ type: "audio_end" } as ServerMessage))
           ws.send(JSON.stringify({ type: "ready" } as ServerMessage))
         } catch (err) {
           console.error("Code submission error:", err)

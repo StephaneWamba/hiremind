@@ -1,6 +1,6 @@
 import { protectedProcedure, publicProcedure, router } from "../index"
 import { db } from "@hiremind/db"
-import { interviewSessions } from "@hiremind/db"
+import { interviewSessions, jobRoles, conversationTurns } from "@hiremind/db"
 import { eq } from "drizzle-orm"
 import { z } from "zod"
 import { createWsToken } from "../../utils/jwt"
@@ -38,22 +38,82 @@ export const sessionsRouter = router({
   get: protectedProcedure
     .input(z.string().uuid())
     .query(async ({ input, ctx }) => {
-      return await db
-        .select()
-        .from(interviewSessions)
-        .where(eq(interviewSessions.id, input))
-        .then((rows) => {
-          if (!rows[0] || rows[0].userId !== ctx.userId) {
-            throw new Error("Not found")
-          }
-          return rows[0]
+      const rows = await db
+        .select({
+          ...interviewSessions._.columns,
+          roleTitle: jobRoles.title,
         })
+        .from(interviewSessions)
+        .leftJoin(jobRoles, eq(interviewSessions.jobRoleId, jobRoles.id))
+        .where(eq(interviewSessions.id, input))
+
+      if (!rows[0] || rows[0].userId !== ctx.userId) {
+        throw new Error("Not found")
+      }
+      return rows[0]
     }),
 
   list: protectedProcedure.query(async ({ ctx }) => {
     return await db
-      .select()
+      .select({
+        ...interviewSessions._.columns,
+        roleTitle: jobRoles.title,
+      })
       .from(interviewSessions)
+      .leftJoin(jobRoles, eq(interviewSessions.jobRoleId, jobRoles.id))
       .where(eq(interviewSessions.userId, ctx.userId))
   }),
+
+  getReport: protectedProcedure
+    .input(z.string().uuid())
+    .query(async ({ input, ctx }) => {
+      // Get session with role title
+      const sessionRows = await db
+        .select({
+          ...interviewSessions._.columns,
+          roleTitle: jobRoles.title,
+        })
+        .from(interviewSessions)
+        .leftJoin(jobRoles, eq(interviewSessions.jobRoleId, jobRoles.id))
+        .where(eq(interviewSessions.id, input))
+
+      if (!sessionRows[0] || sessionRows[0].userId !== ctx.userId) {
+        throw new Error("Report not found")
+      }
+
+      const session = sessionRows[0]
+
+      // Get conversation turns for this session
+      const turns = await db
+        .select()
+        .from(conversationTurns)
+        .where(eq(conversationTurns.sessionId, input))
+
+      // Calculate topic-based scores from turns (placeholder aggregation)
+      const scorePerTopic: Record<string, number> = {
+        technical_depth: 7,
+        communication: 8,
+        problem_solving: 7,
+        relevance: 8,
+      }
+
+      return {
+        session: {
+          roleTitle: session.roleTitle || "Unknown Role",
+          interviewType: session.interviewType,
+          level: session.level,
+          mode: session.mode,
+          durationMinutes: session.durationMinutes || 0,
+          status: session.status,
+          createdAt: session.createdAt,
+        },
+        turns: turns.map((t) => ({
+          role: t.role,
+          content: t.content,
+        })),
+        topicsState: {
+          scorePerTopic,
+        },
+      }
+    }),
 })

@@ -5,7 +5,7 @@ export function buildSystemPrompt(session: InterviewSession): string {
 
   if (!role) throw new Error("Role not found - ensure role is cached at session start")
 
-  return `You are an expert technical interviewer conducting a ${session.state} interview for a ${role.title} position at ${session.currentDifficulty > 5 ? "Senior" : session.currentDifficulty < 5 ? "Junior" : "Mid"} level.
+  return `You are an expert technical interviewer conducting a technical interview for a ${role.title} position at ${session.currentDifficulty > 5 ? "Senior" : session.currentDifficulty < 5 ? "Junior" : "Mid"} level.
 
 Role Details:
 - Title: ${role.title}

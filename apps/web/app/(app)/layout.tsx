@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { AppNav } from "@/components/app-nav"
 import { UserMenu } from "@/components/user-menu"
+import { MobileNav } from "@/components/mobile-nav"
 
 export default async function AppLayout({
   children,
@@ -37,9 +38,11 @@ export default async function AppLayout({
         </div>
       </aside>
 
-      <div className="flex-1 lg:ml-60">
+      <div className="flex-1 lg:ml-60 pb-14 lg:pb-0">
         {children}
       </div>
+
+      <MobileNav />
     </div>
   )
 }

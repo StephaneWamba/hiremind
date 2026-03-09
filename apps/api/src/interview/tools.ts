@@ -40,7 +40,7 @@ export async function evaluateAnswer(
 export async function getNextQuestion(session: InterviewSession): Promise<{ id: string; text: string }> {
   const diffRange = 2
 
-  // Filter from cached questions (already preloaded at session start)
+  // Tier 1: Filter from cached questions within difficulty range
   const availableQuestions = session.cachedAllQuestions.filter(
     (q) =>
       q.difficulty >= Math.max(1, session.currentDifficulty - diffRange) &&
@@ -49,12 +49,26 @@ export async function getNextQuestion(session: InterviewSession): Promise<{ id: 
 
   const unaskedQuestions = availableQuestions.filter((q) => !session.questions.some((sq) => sq.id === q.id))
 
-  if (unaskedQuestions.length === 0) {
-    // Fallback to any cached question
-    return { id: availableQuestions[0].id, text: availableQuestions[0].questionText }
+  let selected
+  if (unaskedQuestions.length > 0) {
+    selected = unaskedQuestions[Math.floor(Math.random() * unaskedQuestions.length)]
+  } else if (availableQuestions.length > 0) {
+    // Tier 2: Fallback to any unasked question (expand search beyond difficulty range)
+    const anyUnasked = session.cachedAllQuestions.filter((q) => !session.questions.some((sq) => sq.id === q.id))
+    if (anyUnasked.length > 0) {
+      selected = anyUnasked[Math.floor(Math.random() * anyUnasked.length)]
+    } else {
+      // Tier 3: Ultimate fallback - recycle first question from all questions
+      selected = session.cachedAllQuestions[0]
+    }
+  } else {
+    // Tier 3: No available questions in range, recycle first
+    selected = session.cachedAllQuestions[0]
   }
 
-  const selected = unaskedQuestions[Math.floor(Math.random() * unaskedQuestions.length)]
+  // Track this question as asked (deduplication)
+  session.questions.push({ id: selected.id, text: selected.questionText, difficulty: selected.difficulty })
+
   return { id: selected.id, text: selected.questionText }
 }
 

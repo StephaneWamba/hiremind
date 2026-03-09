@@ -2,6 +2,7 @@ import { db } from "@hiremind/db"
 import { interviewSessions, conversationTurns, jobRoles, questions } from "@hiremind/db"
 import { eq } from "drizzle-orm"
 import type { ConversationTurn, SessionState, InterviewStatus } from "@hiremind/shared"
+import { buildSystemPrompt } from "./prompts"
 
 export class InterviewSession {
   id: string
@@ -92,6 +93,9 @@ export class InterviewSession {
       category: role.category,
       competencies: role.competencies as any,
     }
+
+    // Cache system prompt once per session (never rebuild during interview)
+    this.systemPrompt = buildSystemPrompt(this)
 
     // Cache all questions for this role to avoid per-turn DB queries
     const allQuestions = await db

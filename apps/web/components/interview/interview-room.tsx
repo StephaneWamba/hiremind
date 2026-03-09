@@ -44,6 +44,8 @@ export function InterviewRoom({ sessionId }: { sessionId: string }) {
   const [isEnding, setIsEnding] = useState(false)
   const transcriptEndRef = useRef<HTMLDivElement>(null)
   const sessionQuery = trpc.sessions.get.useQuery(sessionId)
+  const audioQueueRef = useRef<(Blob | ArrayBuffer)[]>([])
+  const isPlayingAudioRef = useRef(false)
 
   // Timer effect
   useEffect(() => {
@@ -121,8 +123,24 @@ export function InterviewRoom({ sessionId }: { sessionId: string }) {
         }
 
         ws.onmessage = (event) => {
-          const message = JSON.parse(event.data)
-          handleWSMessage(message)
+          // Detect binary audio frames vs JSON messages
+          // Binary data comes as ArrayBuffer, JSON comes as string
+          if (typeof event.data !== "string") {
+            // Binary audio chunk - add to queue
+            audioQueueRef.current.push(event.data)
+            if (!isPlayingAudioRef.current) {
+              playNextAudio()
+            }
+            return
+          }
+
+          // JSON message
+          try {
+            const message = JSON.parse(event.data)
+            handleWSMessage(message)
+          } catch (err) {
+            console.error("Failed to parse WS message:", err)
+          }
         }
 
         ws.onerror = (error) => {
@@ -173,6 +191,43 @@ export function InterviewRoom({ sessionId }: { sessionId: string }) {
       if (audioContextRef.current) audioContextRef.current.close()
     }
   }, [sessionId])
+
+  const playNextAudio = () => {
+    if (audioQueueRef.current.length === 0) {
+      isPlayingAudioRef.current = false
+      return
+    }
+
+    isPlayingAudioRef.current = true
+    const audioData = audioQueueRef.current.shift()
+
+    if (!audioData) {
+      playNextAudio()
+      return
+    }
+
+    // Create blob URL and play
+    const blob = audioData instanceof Blob ? audioData : new Blob([audioData])
+    const url = URL.createObjectURL(blob)
+    const audio = new Audio(url)
+
+    audio.onended = () => {
+      URL.revokeObjectURL(url)
+      playNextAudio()
+    }
+
+    audio.onerror = () => {
+      console.error("Audio playback error")
+      URL.revokeObjectURL(url)
+      playNextAudio()
+    }
+
+    audio.play().catch((err) => {
+      console.error("Failed to play audio:", err)
+      URL.revokeObjectURL(url)
+      playNextAudio()
+    })
+  }
 
   const handleWSMessage = (message: any) => {
     switch (message.type) {
