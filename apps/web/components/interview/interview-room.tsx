@@ -3,6 +3,8 @@
 import React, { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { Mic, MicOff, Send, X } from "lucide-react"
+import ReactMarkdown from "react-markdown"
+import remarkGfm from "remark-gfm"
 import { cn } from "@/lib/utils"
 import { trpc } from "@/lib/trpc"
 import { executeCodeInBrowser } from "@/lib/code-executor"
@@ -601,7 +603,35 @@ export function InterviewRoom({ sessionId }: { sessionId: string }) {
                           : { backgroundColor: "var(--iv-bg)" }
                       }
                     >
-                      <p className="text-sm leading-relaxed whitespace-pre-wrap">{turn.content}</p>
+                      <ReactMarkdown
+                        remarkPlugins={[remarkGfm]}
+                        className="text-sm leading-relaxed markdown-content"
+                        components={{
+                          p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+                          strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
+                          em: ({ children }) => <em className="italic">{children}</em>,
+                          code: ({ children }) => (
+                            <code className="px-1.5 py-0.5 rounded text-xs font-mono" style={{ backgroundColor: "rgba(0,0,0,0.2)" }}>
+                              {children}
+                            </code>
+                          ),
+                          pre: ({ children }) => (
+                            <pre className="bg-black/50 rounded p-3 mb-2 overflow-x-auto text-xs font-mono">
+                              {children}
+                            </pre>
+                          ),
+                          ul: ({ children }) => <ul className="list-disc list-inside mb-2 space-y-1">{children}</ul>,
+                          ol: ({ children }) => <ol className="list-decimal list-inside mb-2 space-y-1">{children}</ol>,
+                          li: ({ children }) => <li className="ml-2">{children}</li>,
+                          blockquote: ({ children }) => (
+                            <blockquote className="border-l-4 border-cyan-500 pl-4 italic text-gray-300 my-2">
+                              {children}
+                            </blockquote>
+                          ),
+                        }}
+                      >
+                        {turn.content}
+                      </ReactMarkdown>
                     </div>
                     {turn.role === "candidate" && (
                       <div className="text-xs font-medium px-2 py-1" style={{ color: "var(--iv-text-muted)" }}>
@@ -670,7 +700,27 @@ export function InterviewRoom({ sessionId }: { sessionId: string }) {
                           : { backgroundColor: "var(--iv-bg)" }
                       }
                     >
-                      <p className="text-sm">{turn.content}</p>
+                      <ReactMarkdown
+                        remarkPlugins={[remarkGfm]}
+                        className="text-sm markdown-content"
+                        components={{
+                          p: ({ children }) => <p className="mb-1 last:mb-0">{children}</p>,
+                          strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
+                          em: ({ children }) => <em className="italic">{children}</em>,
+                          code: ({ children }) => (
+                            <code className="px-1 py-0.5 rounded text-xs font-mono" style={{ backgroundColor: "rgba(0,0,0,0.2)" }}>
+                              {children}
+                            </code>
+                          ),
+                          pre: ({ children }) => (
+                            <pre className="bg-black/50 rounded p-2 mb-1 overflow-x-auto text-xs font-mono">
+                              {children}
+                            </pre>
+                          ),
+                        }}
+                      >
+                        {turn.content}
+                      </ReactMarkdown>
                     </div>
                   </div>
                 ))}
