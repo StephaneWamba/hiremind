@@ -69,7 +69,7 @@ export function InterviewRoom({ sessionId }: { sessionId: string }) {
       // Get session info from tRPC query result
       if (sessionQuery.data) {
         setSessionInfo({
-          roleTitle: sessionQuery.data.jobRoleId || "Interview",
+          roleTitle: (sessionQuery.data as any).roleTitle || sessionQuery.data.jobRoleId || "Interview",
           type: sessionQuery.data.interviewType || "",
         })
         // Set mode from session data
@@ -569,8 +569,54 @@ export function InterviewRoom({ sessionId }: { sessionId: string }) {
               />
             </div>
           </>
+        ) : mode === "text" ? (
+          <>
+            {/* Text Mode: Full-width chat layout */}
+            <div className="w-full flex flex-col overflow-hidden" style={{ backgroundColor: "var(--iv-surface)" }}>
+              {/* Chat Messages */}
+              <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 flex flex-col">
+                {transcript.map((turn, i) => (
+                  <div
+                    key={i}
+                    className={cn(
+                      "flex gap-3",
+                      turn.role === "interviewer" ? "justify-start" : "justify-end"
+                    )}
+                  >
+                    {turn.role === "interviewer" && (
+                      <div className="text-xs font-medium px-2 py-1" style={{ color: "var(--iv-text-muted)" }}>
+                        AI
+                      </div>
+                    )}
+                    <div
+                      className={cn(
+                        "max-w-lg px-4 py-2 rounded-lg",
+                        turn.role === "interviewer"
+                          ? "text-iv-text"
+                          : "rounded-lg"
+                      )}
+                      style={
+                        turn.role === "interviewer"
+                          ? {}
+                          : { backgroundColor: "var(--iv-bg)" }
+                      }
+                    >
+                      <p className="text-sm leading-relaxed whitespace-pre-wrap">{turn.content}</p>
+                    </div>
+                    {turn.role === "candidate" && (
+                      <div className="text-xs font-medium px-2 py-1" style={{ color: "var(--iv-text-muted)" }}>
+                        You
+                      </div>
+                    )}
+                  </div>
+                ))}
+                <div ref={transcriptEndRef} />
+              </div>
+            </div>
+          </>
         ) : (
           <>
+            {/* Voice Mode: Split layout with interviewer panel */}
             {/* Interviewer Panel - 40% on desktop, full on mobile */}
             <div
               className="w-full lg:w-2/5 flex flex-col items-center justify-center border-b lg:border-b-0 lg:border-r p-4 sm:p-6"
