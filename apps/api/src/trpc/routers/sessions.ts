@@ -1,7 +1,7 @@
-import { protectedProcedure, publicProcedure, router } from "../index"
+import { protectedProcedure, router } from "../index"
 import { db } from "@hiremind/db"
 import { interviewSessions, jobRoles, conversationTurns } from "@hiremind/db"
-import { eq, getTableColumns } from "drizzle-orm"
+import { eq } from "drizzle-orm"
 import { z } from "zod"
 import { createWsToken } from "../../utils/jwt"
 
@@ -40,7 +40,16 @@ export const sessionsRouter = router({
     .query(async ({ input, ctx }) => {
       const rows = await db
         .select({
-          ...getTableColumns(interviewSessions),
+          id: interviewSessions.id,
+          userId: interviewSessions.userId,
+          jobRoleId: interviewSessions.jobRoleId,
+          interviewType: interviewSessions.interviewType,
+          level: interviewSessions.level,
+          mode: interviewSessions.mode,
+          status: interviewSessions.status,
+          currentDifficulty: interviewSessions.currentDifficulty,
+          durationMinutes: interviewSessions.durationMinutes,
+          createdAt: interviewSessions.createdAt,
           roleTitle: jobRoles.title,
         })
         .from(interviewSessions)
@@ -56,7 +65,16 @@ export const sessionsRouter = router({
   list: protectedProcedure.query(async ({ ctx }) => {
     return await db
       .select({
-        ...interviewSessions._.columns,
+        id: interviewSessions.id,
+        userId: interviewSessions.userId,
+        jobRoleId: interviewSessions.jobRoleId,
+        interviewType: interviewSessions.interviewType,
+        level: interviewSessions.level,
+        mode: interviewSessions.mode,
+        status: interviewSessions.status,
+        currentDifficulty: interviewSessions.currentDifficulty,
+        durationMinutes: interviewSessions.durationMinutes,
+        createdAt: interviewSessions.createdAt,
         roleTitle: jobRoles.title,
       })
       .from(interviewSessions)
@@ -67,10 +85,17 @@ export const sessionsRouter = router({
   getReport: protectedProcedure
     .input(z.string().uuid())
     .query(async ({ input, ctx }) => {
-      // Get session with role title
       const sessionRows = await db
         .select({
-          ...getTableColumns(interviewSessions),
+          id: interviewSessions.id,
+          userId: interviewSessions.userId,
+          jobRoleId: interviewSessions.jobRoleId,
+          interviewType: interviewSessions.interviewType,
+          level: interviewSessions.level,
+          mode: interviewSessions.mode,
+          status: interviewSessions.status,
+          durationMinutes: interviewSessions.durationMinutes,
+          createdAt: interviewSessions.createdAt,
           roleTitle: jobRoles.title,
         })
         .from(interviewSessions)
@@ -83,13 +108,11 @@ export const sessionsRouter = router({
 
       const session = sessionRows[0]
 
-      // Get conversation turns for this session
       const turns = await db
         .select()
         .from(conversationTurns)
         .where(eq(conversationTurns.sessionId, input))
 
-      // Calculate topic-based scores from turns (placeholder aggregation)
       const scorePerTopic: Record<string, number> = {
         technical_depth: 7,
         communication: 8,
