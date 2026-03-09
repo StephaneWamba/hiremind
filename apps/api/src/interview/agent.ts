@@ -96,7 +96,7 @@ export async function runAgentTurn(
           // Remove the processed sentence from accumulated text
           accumulatedText = accumulatedText.slice(sentence.length).trimStart()
         }
-      } else if (event.type === "content_block_delta" && event.delta?.type === "tool_use_input") {
+      } else if (event.type === "content_block_delta" && event.delta?.type === "input_json_delta") {
         // Tool input streaming - just accumulate
       } else if (event.type === "content_block_stop") {
         // End of a content block

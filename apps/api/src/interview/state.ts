@@ -8,7 +8,7 @@ export class InterviewSession {
   id: string
   userId: string
   jobRoleId: string
-  messages: Array<{ role: "user" | "assistant"; content: string }> = []
+  messages: Array<{ role: "user" | "assistant"; content: string | any[] }> = []
   state: SessionState = {
     difficulty: 5,
     topicsCovered: [],
