@@ -8,8 +8,6 @@ export async function POST(req: NextRequest) {
   // Store accessToken in a regular (non-httpOnly) cookie so JS can read it for tRPC headers
   response.cookies.set("accessToken", accessToken, {
     httpOnly: false,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
     maxAge: 15 * 60, // 15 minutes
     path: "/",
   })
