@@ -167,12 +167,22 @@ export class InterviewSession {
   }
 
   async persistFinal() {
+    // Map SessionState to topicsState schema
+    const scorePerTopic: Record<string, number> = {}
+    for (const [topic, scores] of Object.entries(this.state.scores)) {
+      scorePerTopic[topic] = scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0
+    }
+
     await db
       .update(interviewSessions)
       .set({
         status: "completed",
         endedAt: new Date(),
-        topicsState: this.state,
+        topicsState: {
+          covered: this.state.topicsCovered,
+          remaining: this.state.topicsRemaining,
+          scorePerTopic,
+        },
         durationMinutes: Math.round(
           (Date.now() - (this.turns[0]?.timestamp?.getTime() || Date.now())) / 60000
         ),
