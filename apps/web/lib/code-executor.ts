@@ -48,7 +48,7 @@ export async function executeCodeInBrowser(
 
     window.addEventListener("message", handleMessage)
 
-    // 5 second timeout for code execution
+    // 15 second timeout for code execution (increased from 5s)
     timeout = setTimeout(() => {
       if (!resolved) {
         resolved = true
@@ -56,11 +56,11 @@ export async function executeCodeInBrowser(
         window.removeEventListener("message", handleMessage)
         resolve({
           stdout: "",
-          stderr: "Code execution timeout (5s)",
+          stderr: "Code execution timeout (15s). Your code may be too complex or have an infinite loop.",
           exitCode: 1,
         })
       }
-    }, 5000)
+    }, 15000)
 
     // Wrap user code to capture console output
     const wrappedCode = `
@@ -99,19 +99,45 @@ export async function executeCodeInBrowser(
 
     // Create the iframe document with the code
     iframe.onload = () => {
-      iframe.contentWindow?.document.open()
-      iframe.contentWindow?.document.write(`
-        <!DOCTYPE html>
-        <html>
-          <head>
-            <meta charset="UTF-8">
-          </head>
-          <body>
-            <script>${wrappedCode}</script>
-          </body>
-        </html>
-      `)
-      iframe.contentWindow?.document.close()
+      try {
+        iframe.contentWindow?.document.open()
+        iframe.contentWindow?.document.write(`
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <meta charset="UTF-8">
+            </head>
+            <body>
+              <script>${wrappedCode}</script>
+            </body>
+          </html>
+        `)
+        iframe.contentWindow?.document.close()
+      } catch (err) {
+        if (!resolved) {
+          resolved = true
+          cleanup()
+          window.removeEventListener("message", handleMessage)
+          resolve({
+            stdout: "",
+            stderr: `Iframe execution error: ${err instanceof Error ? err.message : String(err)}`,
+            exitCode: 1,
+          })
+        }
+      }
+    }
+
+    iframe.onerror = () => {
+      if (!resolved) {
+        resolved = true
+        cleanup()
+        window.removeEventListener("message", handleMessage)
+        resolve({
+          stdout: "",
+          stderr: "Failed to load code execution iframe",
+          exitCode: 1,
+        })
+      }
     }
 
     document.body.appendChild(iframe)
